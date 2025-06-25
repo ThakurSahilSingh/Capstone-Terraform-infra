@@ -285,9 +285,9 @@ resource "aws_db_instance" "mysql" {
 }
  
  
-/* 
 resource "aws_iam_role" "codepipeline_service_role" {
   name = "CodePipelineServiceRole"
+/*
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
@@ -296,8 +296,10 @@ resource "aws_iam_role" "codepipeline_service_role" {
       Action = "sts:AssumeRole"
     }]
   })
+*/
 }
-*/ 
+
+
 resource "aws_iam_role_policy_attachment" "codepipeline_service_policy_attachment" {
   role       = aws_iam_role.codepipeline_service_role.name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
