@@ -1,0 +1,51 @@
+version: 0.2
+ 
+# Environment variables for Terraform version and install path
+env:
+  variables:
+    TF_VERSION: "1.7.5"
+    TF_PATH: "/usr/local/bin"
+ 
+phases:
+  install:
+    commands:
+      - "echo \"Installing Terraform CLI version ${TF_VERSION}...\""
+      - "curl -sS -o terraform.zip \"https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip\""
+      - "unzip -o terraform.zip -d \"${TF_PATH}\""
+      - "rm terraform.zip"
+      - "chmod +x \"${TF_PATH}/terraform\""
+      - "echo \"Terraform installed:\""
+      - "terraform version"
+      - "echo \"Checking AWS CLI version...\""
+      - "aws --version"
+ 
+  pre_build:
+    commands:
+      - "echo \"Changing to Terraform directory (assuming main.tf is at root of source artifact)...\""
+      # If your Terraform files are in a subdirectory (e.g., 'terraform/'), uncomment and adjust the line below:
+      # - "cd terraform/"
+      - "echo \"Initializing Terraform...\""
+      - "terraform init"
+ 
+  build:
+    commands:
+      - "echo \"Validating Terraform configuration...\""
+      - "terraform validate"
+      - "echo \"Generating Terraform plan...\""
+      - "terraform plan -out=tfplan.out"
+      - "echo \"Applying Terraform changes...\""
+      - "terraform apply -auto-approve tfplan.out"
+ 
+  post_build:
+    commands:
+      - "echo \"Terraform deployment complete.\""
+      # The following commands output useful information after deployment:
+      - "echo \"EKS Cluster Name: $(terraform output -raw eks_cluster_name_output)\""
+      - "echo \"RDS Endpoint Address: $(terraform output -raw db_endpoint_address)\""
+ 
+# Artifacts are not typically needed for infrastructure deployments that directly modify AWS resources.
+# If you used a remote state backend (recommended), the state would be stored there.
+# artifacts:
+#   files:
+#     - '**/*'
+#   discard-paths: yes
