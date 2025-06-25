@@ -140,7 +140,7 @@ resource "aws_codebuild_project" "build" {
 }
 data "aws_caller_identity" "current" {}
  
-resource "aws_codebuild_project" "deploy" {
+resource "aws_codebuild_project_deploy" "deploy" {
   name         = "ThreeTierDeployProject"
   service_role = aws_iam_role.codepipeline_deploy_role.arn
  
@@ -351,7 +351,7 @@ resource "aws_iam_role_policy_attachment" "codepipeline_deploy_role_attachments"
   policy_arn = "arn:aws:iam::aws:policy/${each.value}"
 }
  
-resource "aws_codebuild_project" "deploy" {
+resource "aws_codebuild_project_deploy" "deploy" {
   name          = "ThreeTierAppDeployProject"
   service_role  = aws_iam_role.codebuild_role.arn
   artifacts {
@@ -424,7 +424,7 @@ resource "aws_codepipeline" "pipeline" {
       version          = "1"
       input_artifacts  = ["BuildOutput"]
       configuration = {
-        ProjectName = aws_codebuild_project.deploy.name
+        ProjectName = aws_codebuild_project_deploy.deploy.name
       }
       run_order = 1
     }
