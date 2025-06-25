@@ -45,4 +45,5 @@ phases:
 artifacts:
   files:
     - tfstate/terraform.tfstate
+    - buildspec-deploy.yml
   discard-paths: yes
