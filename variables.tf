@@ -5,7 +5,7 @@ variable "region" {
  
 variable "github_repo" {
   description = "GitHub repository name"
-  default     = "ThakurSahilSingh/Capstone"
+  default     = "ThakurSahilSingh/Capstone-Terraforn-Deployment"
 }
  
 variable "github_branch" {
