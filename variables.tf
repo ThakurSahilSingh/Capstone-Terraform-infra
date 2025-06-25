@@ -10,11 +10,11 @@ variable "db_username" {
 
 variable "db_password" {
   description = "Database password"
-  default     = "adminadmin"
+  default     = "Admin123123"
   sensitive   = true
 }
 
 variable "eks_admin_iam_arn" {
   description = "IAM ARN for EKS admin user"
-  default     = "arn:aws:iam::047719630685:user/Admin-USer"
+  default     = "arn:aws:iam::137068239975:user/sahil13"
 }
