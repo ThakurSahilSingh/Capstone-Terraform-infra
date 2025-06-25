@@ -140,7 +140,7 @@ resource "aws_codebuild_project" "build" {
 }
 data "aws_caller_identity" "current" {}
  
-resource "aws_codebuild_project_deploy" "deploy" {
+resource "aws_codebuild_project" "deploy" {
   name         = "ThreeTierDeployProject"
   service_role = aws_iam_role.codepipeline_deploy_role.arn
  
@@ -167,6 +167,7 @@ resource "aws_codebuild_project_deploy" "deploy" {
  
   source {
     type = "CODEPIPELINE"
+    buildspec = "buildspec-deploy.yml"
   }
  
   build_timeout = 30
@@ -350,29 +351,7 @@ resource "aws_iam_role_policy_attachment" "codepipeline_deploy_role_attachments"
   role       = aws_iam_role.codepipeline_deploy_role.name
   policy_arn = "arn:aws:iam::aws:policy/${each.value}"
 }
- 
-resource "aws_codebuild_project_deploy" "deploy" {
-  name          = "ThreeTierAppDeployProject"
-  service_role  = aws_iam_role.codebuild_role.arn
-  artifacts {
-    type = "CODEPIPELINE"
-  }
-  environment {
-    compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "aws/codebuild/standard:6.0"
-    type                        = "LINUX_CONTAINER"
-    privileged_mode             = true
-    environment_variable {
-      name  = "AWS_REGION"
-      value = var.region
-    }
-  }
-  source {
-    type      = "CODEPIPELINE"
-    buildspec = "buildspec-deploy.yml"
-  }
-}
- 
+  
 resource "aws_codepipeline" "pipeline" {
   name     = "ThreeTierPipeline"
   role_arn = aws_iam_role.codepipeline_service_role.arn
@@ -424,7 +403,7 @@ resource "aws_codepipeline" "pipeline" {
       version          = "1"
       input_artifacts  = ["BuildOutput"]
       configuration = {
-        ProjectName = aws_codebuild_project_deploy.deploy.name
+        ProjectName = aws_codebuild_project.deploy.name
       }
       run_order = 1
     }
