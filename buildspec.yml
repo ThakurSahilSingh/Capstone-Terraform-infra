@@ -21,7 +21,6 @@ phases:
   pre_build:
     commands:
       - echo "Changing to Terraform directory (assuming main.tf is at root of source artifact)..."
-      # If using a subdirectory, update the path accordingly.
       - mkdir -p tfstate
       - echo "Initializing Terraform..."
       - terraform init
@@ -38,14 +37,12 @@ phases:
       - cp terraform.tfstate tfstate/
 
   post_build:
-  commands:
-    - echo "Terraform deployment complete."
-    - echo 'EKS Cluster Name: $(terraform output -raw eks_cluster_name_output)'
-    - echo 'RDS Endpoint Address: $(terraform output -raw db_endpoint_address)'
-
+    commands:
+      - echo "Terraform deployment complete."
+      - echo 'EKS Cluster Name: $(terraform output -raw eks_cluster_name_output)'
+      - echo 'RDS Endpoint Address: $(terraform output -raw db_endpoint_address)'
 
 artifacts:
   files:
     - tfstate/terraform.tfstate
-    - buildspec-deploy.yml
   discard-paths: yes
