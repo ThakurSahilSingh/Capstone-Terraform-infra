@@ -38,10 +38,11 @@ phases:
       - cp terraform.tfstate tfstate/
 
   post_build:
-    commands:
-      - echo "Terraform deployment complete."
-      - echo "EKS Cluster Name: $(terraform output -raw eks_cluster_name_output)"
-      - echo "RDS Endpoint Address: $(terraform output -raw db_endpoint_address)"
+  commands:
+    - echo "Terraform deployment complete."
+    - echo 'EKS Cluster Name: $(terraform output -raw eks_cluster_name_output)'
+    - echo 'RDS Endpoint Address: $(terraform output -raw db_endpoint_address)'
+
 
 artifacts:
   files:
